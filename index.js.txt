@@ -1,0 +1,35 @@
+const RPC = require('discord-rpc');
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Tạo server web giả lập để giữ app luôn online 24/7 trên Render/Fly.io
+app.get('/', (req, res) => {
+  res.send('Discord RPC Bot is running 24/7!');
+});
+
+app.listen(port, () => {
+  console.log(`Web server is listening on port ${port}`);
+});
+
+// Phần cấu hình Rich Presence
+const clientId = '1545999072903700543'; // Client ID của bạn
+RPC.register(clientId);
+
+const rpc = new RPC.Client({ transport: 'ipc' });
+
+rpc.on('ready', () => {
+  console.log('RPC is active and connected!');
+  
+  // Đặt thông tin trạng thái hiển thị
+  rpc.setActivity({
+    details: 'bender',
+    state: 'bender',
+    startTimestamp: new Date(),
+    largeImageKey: 'cover', // Tên ảnh bạn đã upload lên Discord Developer
+    largeImageText: 'bender',
+    instance: false,
+  });
+});
+
+rpc.login({ clientId }).catch(console.error);
