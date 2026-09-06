@@ -1,20 +1,21 @@
-const Discord = require('discord.js-selfbot-v11');
+const { Client } = require('discord.js-selfbot-v13');
 const express = require('express');
 
 const app = express();
-app.get('/', (req, res) => res.send('Bot is running!'));
-app.listen(process.env.PORT || 3000);
+const port = process.env.PORT || 3000;
 
-const client = new Discord.Client();
+app.get('/', (req, res) => {
+  res.send('Bot is running!');
+});
 
-client.on('ready', () => {
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});
+
+const client = new Client();
+
+client.on('ready', async () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  client.user.setPresence({
-    game: {
-      name: 'Minecraft',
-      type: 'PLAYING',
-    }
-  });
 });
 
 client.login(process.env.DISCORD_TOKEN);
